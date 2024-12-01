@@ -26,8 +26,8 @@ public class Day1 : AocDayBase<int, int>
             .Select(l => l.Split("   "))
             .Select(l => (line1: int.Parse(l[0]), line2: int.Parse(l[1]))).ToArray();
         
-        var list1 = lines.Select(x => x.line1).Order();
-        var list2 = lines.Select(x => x.line2).Order();
+        var list1 = lines.Select(x => x.line1);
+        var list2 = lines.Select(x => x.line2);
         
         var countDict = list2
             .GroupBy(x => x)
