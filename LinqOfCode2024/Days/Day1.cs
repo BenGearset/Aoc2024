@@ -11,7 +11,7 @@ public class Day1 : AocDayBase<int, int>
         var lines = Input
             .ReadLines()
             .Select(l => l.Split("   "))
-            .Select(l => (line1: int.Parse(l[0]), line2: int.Parse(l[0]))).ToArray();
+            .Select(l => (line1: int.Parse(l[0]), line2: int.Parse(l[1]))).ToArray();
         
         var list1 = lines.Select(x => x.line1).Order();
         var list2 =  lines.Select(x => x.line2).Order();
@@ -24,7 +24,7 @@ public class Day1 : AocDayBase<int, int>
         var lines = Input
             .ReadLines()
             .Select(l => l.Split("   "))
-            .Select(l => (line1: int.Parse(l[0]), line2: int.Parse(l[0]))).ToArray();
+            .Select(l => (line1: int.Parse(l[0]), line2: int.Parse(l[1]))).ToArray();
         
         var list1 = lines.Select(x => x.line1).Order();
         var list2 = lines.Select(x => x.line2).Order();
