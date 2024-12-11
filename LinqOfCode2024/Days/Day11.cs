@@ -1,34 +1,37 @@
-using System.Collections;
 using LinqOfCode2024.Utils;
 
 namespace LinqOfCode2024.Days;
 
-public class Day11 : AocDayBase<int, int>
+public class Day11 : AocDayBase<long, long>
 {
     protected override int Day => 11;
-    public override int Puzzle1()
+    public override long Puzzle1()
+    {
+        var stoneCollection = new StoneCollection(Input.RawValue.Split(' ').Select(long.Parse));
+
+        stoneCollection.BlinkMultiple(25);
+
+        return stoneCollection.Count;
+    }
+
+    public override long Puzzle2()
     {
         var stoneCollection = new StoneCollection(Input.RawValue.Split(' ').Select(long.Parse));
 
         stoneCollection.BlinkMultiple(75);
 
-        return stoneCollection.Count();
-    }
-
-    public override int Puzzle2()
-    {
-        throw new NotImplementedException();
+        return stoneCollection.Count;
     }
 }
 
 
-class StoneCollection : IEnumerable<long>
+class StoneCollection
 {
-    private readonly List<long> m_Stones;
+    private Dictionary<long, long> m_StoneCounts;
 
     public StoneCollection(IEnumerable<long> stones)
     {
-        m_Stones = stones.ToList();
+        m_StoneCounts = stones.GroupBy(x => x).ToDictionary(stone => stone.Key, stone => (long) stone.Count());
     }
 
     public void BlinkMultiple(int times)
@@ -41,38 +44,42 @@ class StoneCollection : IEnumerable<long>
 
     private void Blink()
     {
-        var pointer = 0;
-
-        while (pointer < m_Stones.Count)
+        var prevCounts = m_StoneCounts.ToDictionary();
+        m_StoneCounts = new Dictionary<long, long>();
+        
+        foreach (var stone in prevCounts)
         {
-            var stone = m_Stones[pointer];
-            if (stone == 0)
+            if (stone.Key == 0)
             {
-                m_Stones[pointer] = 1;
-            } else if (stone.ToString().Length % 2 == 0)
+                m_StoneCounts.AddOrIncrement(1, stone.Value);
+            } 
+            else if (stone.Key.ToString().Length % 2 == 0)
             {
-                var split = stone.ToString();
+                var split = stone.Key.ToString();
                 var firstHalf = long.Parse(split.Take(split.Length/2).ToArray());
                 var otherHalf = long.Parse(split.Skip(split.Length/2).ToArray());
-
-                m_Stones[pointer] = otherHalf;
-                m_Stones.Insert(pointer, firstHalf);
-                pointer++;
+                
+                m_StoneCounts.AddOrIncrement(firstHalf, stone.Value);
+                m_StoneCounts.AddOrIncrement(otherHalf, stone.Value);
             }
             else
             {
-                m_Stones[pointer] = stone * 2024;
+                m_StoneCounts.AddOrIncrement(stone.Key * 2024, stone.Value);
             }
-
-            pointer++;
         }
 
     }
 
-    public IEnumerator<long> GetEnumerator() => m_Stones.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    public long Count => m_StoneCounts.Sum(x => x.Value);
 }
+
+public static class DictionaryExtensions
+{
+    public static void AddOrIncrement<K>(this IDictionary<K, long> dict, K key, long value)
+    {
+        if (!dict.TryAdd(key, value))
+        {
+            dict[key] += value;
+        }
+    }
+} 
