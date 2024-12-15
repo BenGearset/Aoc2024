@@ -148,7 +148,7 @@ class Warehouse2
         {
             foreach (var box in touchingBoxes)
             {
-                if (m_Warehouse[box.y - 1][box.x2] == WarehouseCell.Wall)
+                if (m_Warehouse[box.y - 1][box.x1] == WarehouseCell.Wall)
                 {
                     return false;
                 }
