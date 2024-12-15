@@ -5,7 +5,7 @@ namespace LinqOfCode2024;
 
 public class AocProgram
 {
-    private static readonly IAocDay s_Day = new Day14();
+    private static readonly IAocDay s_Day = new Day15();
     
     public static void Main()
     {
